@@ -156,7 +156,11 @@ The system can answer the following questions:
 * 🚻 Gender-based purchasing analysis
 
 ---
+## 📊 Dashboard Note
 
+The dashboard currently uses static data for demonstration purposes.
+
+In a real-world scenario, the data would be dynamically retrieved from PostgreSQL.
 ## 👤 Author
 
 **Mohammed Ryad Benyakoub**
