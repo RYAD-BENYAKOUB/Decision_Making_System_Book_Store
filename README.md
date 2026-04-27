@@ -128,7 +128,24 @@ Run the jobs in the following order:
 * TP5
 
 ---
+## 📊 Dashboard
 
+A dashboard was developed using Google Charts to visualize the data stored in the Data Warehouse.
+
+### 🔹 Features
+- Sales analysis by month/year  
+- Top-selling books  
+- Top customers  
+- Revenue evolution  
+
+### 🔹 Technologies
+- Google Charts (JavaScript)
+- Data extracted from PostgreSQL
+
+### 🔹 Example Visualizations
+- Bar charts (Top sales)
+- Line charts (Sales over time)
+- Pie charts (Customer distribution)
 ## 📈 Analytical Capabilities
 
 The system can answer the following questions:
@@ -139,7 +156,11 @@ The system can answer the following questions:
 * 🚻 Gender-based purchasing analysis
 
 ---
+## 📊 Dashboard Note
 
+The dashboard currently uses static data for demonstration purposes.
+
+In a real-world scenario, the data would be dynamically retrieved from PostgreSQL.
 ## 👤 Author
 
 **Mohammed Ryad Benyakoub**
