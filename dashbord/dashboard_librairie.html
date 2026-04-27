@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard Librairie — Ventes 2018</title>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:       #1a1410;
+      --paper:     #f5f0e8;
+      --cream:     #ede8da;
+      --gold:      #c4942a;
+      --gold-lt:   #e8c96b;
+      --rust:      #9b3a2f;
+      --sage:      #4a6741;
+      --card:      #fffdf7;
+      --border:    #d4cbb8;
+      --shadow:    rgba(26,20,16,.10);
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 28px 48px 24px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      border-bottom: 4px solid var(--gold);
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '📚';
+      position: absolute;
+      right: 40px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 90px;
+      opacity: .06;
+      pointer-events: none;
+    }
+    header .brand { line-height: 1; }
+    header .brand h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.4rem;
+      font-weight: 900;
+      letter-spacing: -.5px;
+      color: var(--gold-lt);
+    }
+    header .brand p {
+      font-size: .85rem;
+      font-weight: 300;
+      color: #b0a898;
+      margin-top: 4px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    header .period {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      color: var(--gold);
+      text-align: right;
+      line-height: 1.6;
+    }
+    header .period strong { font-size: 1.7rem; display: block; }
+
+    /* ── KPI STRIP ── */
+    .kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0;
+      border-bottom: 3px solid var(--border);
+    }
+    .kpi {
+      background: var(--card);
+      padding: 22px 20px 18px;
+      border-right: 1px solid var(--border);
+      position: relative;
+      transition: background .2s;
+    }
+    .kpi:last-child { border-right: none; }
+    .kpi:hover { background: #fffef5; }
+    .kpi-label {
+      font-size: .68rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #8a8070;
+      font-weight: 500;
+    }
+    .kpi-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.1;
+      margin-top: 4px;
+    }
+    .kpi-value span { font-size: .9rem; font-weight: 400; color: var(--gold); margin-left: 2px; }
+    .kpi-sub {
+      font-size: .72rem;
+      color: var(--sage);
+      margin-top: 4px;
+      font-weight: 500;
+    }
+    .kpi::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 20px; right: 20px;
+      height: 2px;
+      background: var(--gold);
+      transform: scaleX(0);
+      transition: transform .3s;
+      transform-origin: left;
+    }
+    .kpi:hover::after { transform: scaleX(1); }
+
+    /* ── LAYOUT ── */
+    .dashboard {
+      padding: 28px 36px 48px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto auto;
+      gap: 22px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      padding: 20px 22px 16px;
+      box-shadow: 0 2px 12px var(--shadow);
+      position: relative;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 4px; height: 100%;
+      background: var(--gold);
+      border-radius: 2px 0 0 2px;
+    }
+    .card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--ink);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-title .icon { font-size: 1.1rem; }
+    .card-subtitle {
+      font-size: .72rem;
+      color: #8a8070;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      margin-left: auto;
+    }
+    .chart-wrap { width: 100%; overflow: hidden; }
+
+    /* Full-width cards */
+    .full { grid-column: 1 / -1; }
+
+    /* ── TABS ── */
+    .tabs { display: flex; gap: 6px; margin-bottom: 14px; }
+    .tab {
+      padding: 5px 16px;
+      font-size: .78rem;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      border: 1px solid var(--border);
+      background: var(--cream);
+      cursor: pointer;
+      border-radius: 2px;
+      color: #6a6050;
+      transition: all .15s;
+      letter-spacing: .5px;
+    }
+    .tab.active, .tab:hover {
+      background: var(--ink);
+      color: var(--gold-lt);
+      border-color: var(--ink);
+    }
+
+    /* ── TOOLTIP OVERRIDE ── */
+    .google-visualization-tooltip {
+      font-family: 'DM Sans', sans-serif !important;
+      border: 1px solid var(--border) !important;
+      border-radius: 2px !important;
+      box-shadow: 0 4px 16px var(--shadow) !important;
+    }
+
+    /* ── TABLE ── */
+    .rankings { width: 100%; border-collapse: collapse; font-size: .82rem; }
+    .rankings thead th {
+      text-align: left;
+      font-size: .67rem;
+      text-transform: uppercase;
+      letter-spacing: 1.3px;
+      color: #8a8070;
+      border-bottom: 2px solid var(--border);
+      padding: 0 8px 8px;
+      font-weight: 500;
+    }
+    .rankings tbody tr { border-bottom: 1px solid var(--cream); transition: background .15s; }
+    .rankings tbody tr:hover { background: var(--cream); }
+    .rankings td { padding: 8px 8px; vertical-align: middle; }
+    .rank-num {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--gold);
+      width: 28px;
+    }
+    .rank-title { font-weight: 500; color: var(--ink); max-width: 220px; }
+    .rank-author { font-size: .75rem; color: #7a7060; }
+    .rank-bar-wrap { width: 90px; }
+    .rank-bar {
+      height: 6px;
+      border-radius: 3px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-lt));
+    }
+    .rank-ca {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: .95rem;
+      color: var(--ink);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    /* ── FILTER BAR ── */
+    .filter-bar {
+      background: var(--ink);
+      padding: 10px 36px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: .78rem;
+      color: #b0a898;
+      letter-spacing: .5px;
+    }
+    .filter-bar label { font-weight: 500; color: var(--gold); }
+    .filter-bar select {
+      background: #2a2420;
+      color: var(--paper);
+      border: 1px solid #4a4038;
+      padding: 4px 10px;
+      border-radius: 2px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .78rem;
+      cursor: pointer;
+    }
+
+    /* loading */
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #9a9080;
+      font-size: .85rem;
+      letter-spacing: 1px;
+    }
+
+    @media (max-width: 900px) {
+      .kpi-strip { grid-template-columns: repeat(3,1fr); }
+      .dashboard { grid-template-columns: 1fr; padding: 16px; }
+      .full { grid-column: 1; }
+      header { padding: 18px 20px; flex-direction: column; align-items: flex-start; gap: 8px; }
+      header .brand h1 { font-size: 1.7rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <h1>Librairie Analytics</h1>
+    <p>Tableau de bord des ventes — Données 2018</p>
+  </div>
+  <div class="period">
+    Exercice<strong>2018</strong>Fév · Mar · Avr
+  </div>
+</header>
+
+<!-- KPI STRIP -->
+<div class="kpi-strip">
+  <div class="kpi">
+    <div class="kpi-label">Chiffre d'affaires</div>
+    <div class="kpi-value">112 937<span>€</span></div>
+    <div class="kpi-sub">Total 2018</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">Unités vendues</div>
+    <div class="kpi-value">1 314</div>
+    <div class="kpi-sub">exemplaires</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">Transactions</div>
+    <div class="kpi-value">630</div>
+    <div class="kpi-sub">lignes de vente</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">Panier moyen</div>
+    <div class="kpi-value">179<span>€</span></div>
+    <div class="kpi-sub">par transaction</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">Titres différents</div>
+    <div class="kpi-value">21</div>
+    <div class="kpi-sub">livres actifs</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">Clients actifs</div>
+    <div class="kpi-value">45</div>
+    <div class="kpi-sub">acheteurs</div>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <label>Afficher :</label>
+  <select id="filterMois" onchange="filterData()">
+    <option value="all">Tous les mois</option>
+    <option value="2">Février</option>
+    <option value="3">Mars</option>
+    <option value="4">Avril</option>
+  </select>
+  <span id="filter-info">Toutes les données 2018</span>
+</div>
+
+<div class="dashboard">
+
+  <!-- CHART 1: CA par mois (line + column combo) -->
+  <div class="card full">
+    <div class="card-title">
+      <span class="icon">📈</span>
+      Évolution mensuelle du chiffre d'affaires
+      <span class="card-subtitle">CA (€) &amp; Quantités vendues</span>
+    </div>
+    <div class="tabs">
+      <button class="tab active" onclick="showMoisChart('ca')">CA (€)</button>
+      <button class="tab" onclick="showMoisChart('qte')">Quantités</button>
+      <button class="tab" onclick="showMoisChart('combo')">Combiné</button>
+    </div>
+    <div class="chart-wrap" id="chart_mois" style="height:280px"><div class="loading">Chargement…</div></div>
+  </div>
+
+  <!-- CHART 2: Top livres (horizontal bar) -->
+  <div class="card">
+    <div class="card-title">
+      <span class="icon">🏆</span>
+      Top 10 livres par chiffre d'affaires
+    </div>
+    <div class="chart-wrap" id="chart_livres" style="height:320px"><div class="loading">Chargement…</div></div>
+  </div>
+
+  <!-- CHART 3: Répartition genre (donut) -->
+  <div class="card">
+    <div class="card-title">
+      <span class="icon">👥</span>
+      Profil des acheteurs
+      <span class="card-subtitle">Genre &amp; Tranche d'âge</span>
+    </div>
+    <div class="tabs">
+      <button class="tab active" onclick="showClientChart('genre')">Genre</button>
+      <button class="tab" onclick="showClientChart('age')">Âge</button>
+    </div>
+    <div class="chart-wrap" id="chart_clients" style="height:280px"><div class="loading">Chargement…</div></div>
+  </div>
+
+  <!-- CHART 4: Editions (treemap / bar) -->
+  <div class="card">
+    <div class="card-title">
+      <span class="icon">🏢</span>
+      Maisons d'édition
+      <span class="card-subtitle">Volume d'unités vendues</span>
+    </div>
+    <div class="chart-wrap" id="chart_editions" style="height:280px"><div class="loading">Chargement…</div></div>
+  </div>
+
+  <!-- TABLE: classement livres -->
+  <div class="card full">
+    <div class="card-title">
+      <span class="icon">📖</span>
+      Classement détaillé des titres
+    </div>
+    <table class="rankings">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Titre</th>
+          <th>Auteur</th>
+          <th>Part du CA</th>
+          <th style="text-align:right">CA (€)</th>
+        </tr>
+      </thead>
+      <tbody id="ranking-body"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+google.charts.load('current', {packages: ['corechart','bar','treemap'], language: 'fr'});
+google.charts.setOnLoadCallback(initDashboard);
+
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const DATA = {
+  mois: {
+    labels: ['Février','Mars','Avril'],
+    ca:    [426.87, 101498.31, 11012.40],
+    qte:   [27, 1143, 144],
+  },
+  livres: [
+    {titre:"Naïla de Brume",           auteur:"E. Tremblay",     ca:20544.30},
+    {titre:"L'Enfant-Roi",              auteur:"R. Merle",        ca:9813.96},
+    {titre:"La Volte des vertugadins",  auteur:"R. Merle",        ca:9071.19},
+    {titre:"La canne aux rubans",       auteur:"J. Grangeot",     ca:8873.28},
+    {titre:"L'Armée furieuse",          auteur:"F. Vargas",       ca:8075.34},
+    {titre:"Le patient anglais",        auteur:"M. Ondaatje",     ca:6367.68},
+    {titre:"Une longue impatience",     auteur:"G. Josse",        ca:5809.68},
+    {titre:"Les Yeux des ténèbres",     auteur:"D.R. Koontz",     ca:5789.88},
+    {titre:"Passage du désir",          auteur:"D. Sylvain",      ca:5329.80},
+    {titre:"Refus de témoigner",        auteur:"R. Klüger",       ca:5124.60},
+  ],
+  genre: [
+    {label:'Femmes', value:42762.60},
+    {label:'Hommes', value:70174.98},
+  ],
+  age: [
+    {label:'20–30 ans', value:12659.22},
+    {label:'30–40 ans', value:12436.11},
+    {label:'40–50 ans', value:21756.78},
+    {label:'50–60 ans', value:22521.06},
+    {label:'60–70 ans', value:12996.00},
+    {label:'70+ ans',   value:30568.41},
+  ],
+  editions: [
+    {nom:'AlexandriZ',    qte:146},
+    {nom:'De Fallois',    qte:146},
+    {nom:'Fleuve Noir',   qte:146},
+    {nom:'Infolio',       qte:146},
+    {nom:'Ixelles éd.',   qte:146},
+    {nom:'Noir/Blanc',    qte:146},
+    {nom:'POCKET',        qte:146},
+    {nom:'Viviane Hamy',  qte:146},
+    {nom:"Éd. l'Olivier", qte:146},
+  ],
+};
+
+const COLORS = {
+  gold:   '#c4942a',
+  goldLt: '#e8c96b',
+  rust:   '#9b3a2f',
+  sage:   '#4a6741',
+  ink:    '#1a1410',
+  cream:  '#ede8da',
+  blue:   '#3d6b8e',
+  mauve:  '#7d5a7e',
+};
+const PALETTE = [COLORS.gold, COLORS.rust, COLORS.sage, COLORS.blue, COLORS.mauve,
+                 '#c47a2a','#2a6741','#6b3d8e','#3d8e6b','#8e3d6b'];
+
+let moisMode   = 'ca';
+let clientMode = 'genre';
+
+function initDashboard() {
+  drawMoisChart();
+  drawLivresChart();
+  drawClientChart();
+  drawEditionsChart();
+  buildTable();
+}
+
+// ── MOIS ──────────────────────────────────────────────────────────────────────
+function showMoisChart(mode) {
+  moisMode = mode;
+  document.querySelectorAll('.tabs .tab').forEach((t,i,arr)=>{
+    if (t.parentElement.children[0]===t||t.parentElement.children[1]===t||t.parentElement.children[2]===t) {
+      const map = ['ca','qte','combo'];
+      // only affect first tabs group
+    }
+  });
+  // toggle active on first card tabs
+  document.querySelector('.card.full .tabs .tab.active')?.classList.remove('active');
+  event.target.classList.add('active');
+  drawMoisChart();
+}
+
+function drawMoisChart() {
+  const el = document.getElementById('chart_mois');
+  const mois = DATA.mois.labels;
+
+  if (moisMode === 'combo') {
+    const dt = new google.visualization.DataTable();
+    dt.addColumn('string','Mois');
+    dt.addColumn('number','CA (€)');
+    dt.addColumn('number','Unités');
+    mois.forEach((m,i) => dt.addRow([m, DATA.mois.ca[i], DATA.mois.qte[i]]));
+
+    const chart = new google.visualization.ComboChart(el);
+    chart.draw(dt, {
+      height:280, fontName:'DM Sans',
+      seriesType:'bars',
+      series:{1:{type:'line', targetAxisIndex:1, color:COLORS.rust, lineWidth:3, pointSize:7}},
+      colors:[COLORS.gold],
+      vAxes:{0:{title:'CA (€)',textStyle:{color:'#6a6050'}},1:{title:'Unités',textStyle:{color:'#9b3a2f'}}},
+      hAxis:{textStyle:{color:'#4a4038'}},
+      legend:{position:'top',textStyle:{color:'#1a1410',fontName:'DM Sans'}},
+      backgroundColor:'transparent',
+      chartArea:{left:70,right:60,top:40,bottom:40,width:'85%'},
+      bar:{groupWidth:'55%'},
+    });
+  } else {
+    const vals = moisMode === 'ca' ? DATA.mois.ca : DATA.mois.qte;
+    const label = moisMode === 'ca' ? 'CA (€)' : 'Unités vendues';
+    const dt = new google.visualization.DataTable();
+    dt.addColumn('string','Mois');
+    dt.addColumn('number', label);
+    dt.addColumn({type:'string', role:'style'});
+    dt.addColumn({type:'string', role:'annotation'});
+    mois.forEach((m,i) => {
+      const v = vals[i];
+      dt.addRow([m, v, `color:${PALETTE[i]};stroke-color:${COLORS.ink};stroke-width:1`,
+        moisMode === 'ca' ? v.toLocaleString('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0}) : v+'']);
+    });
+    const chart = new google.visualization.ColumnChart(el);
+    chart.draw(dt, {
+      height:280, fontName:'DM Sans',
+      legend:{position:'none'},
+      hAxis:{textStyle:{color:'#4a4038', fontSize:13}},
+      vAxis:{textStyle:{color:'#6a6050'}, format: moisMode==='ca'?'#,### €':'#'},
+      backgroundColor:'transparent',
+      chartArea:{left:80,right:20,top:30,bottom:40,width:'88%'},
+      bar:{groupWidth:'50%'},
+      annotations:{alwaysOutside:false, textStyle:{color:'#fff',bold:true,fontName:'DM Sans'}},
+    });
+  }
+}
+
+// ── LIVRES ────────────────────────────────────────────────────────────────────
+function drawLivresChart() {
+  const el = document.getElementById('chart_livres');
+  const dt = new google.visualization.DataTable();
+  dt.addColumn('string','Titre');
+  dt.addColumn('number','CA (€)');
+  dt.addColumn({type:'string',role:'style'});
+  dt.addColumn({type:'string',role:'tooltip',p:{html:true}});
+
+  [...DATA.livres].reverse().forEach((l,i) => {
+    dt.addRow([
+      l.titre.length > 28 ? l.titre.slice(0,28)+'…' : l.titre,
+      l.ca,
+      `color:${PALETTE[DATA.livres.length-1-i]}`,
+      `<div style="padding:10px;font-family:DM Sans,sans-serif;max-width:220px">
+        <b style="color:#1a1410">${l.titre}</b><br>
+        <span style="color:#7a7060;font-size:.85em">${l.auteur}</span><br>
+        <span style="color:#c4942a;font-weight:700;font-size:1.1em">${l.ca.toLocaleString('fr-FR',{style:'currency',currency:'EUR'})}</span>
+      </div>`
+    ]);
+  });
+
+  const chart = new google.visualization.BarChart(el);
+  chart.draw(dt, {
+    height:320, fontName:'DM Sans',
+    legend:{position:'none'},
+    hAxis:{textStyle:{color:'#6a6050'}, format:'#,### €'},
+    vAxis:{textStyle:{color:'#1a1410', fontSize:12}},
+    backgroundColor:'transparent',
+    chartArea:{left:180,right:30,top:10,bottom:30,width:'68%'},
+    bar:{groupWidth:'70%'},
+    tooltip:{isHtml:true},
+  });
+}
+
+// ── CLIENTS ───────────────────────────────────────────────────────────────────
+function showClientChart(mode) {
+  clientMode = mode;
+  event.target.parentElement.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  event.target.classList.add('active');
+  drawClientChart();
+}
+
+function drawClientChart() {
+  const el = document.getElementById('chart_clients');
+  if (clientMode === 'genre') {
+    const dt = new google.visualization.DataTable();
+    dt.addColumn('string','Genre');
+    dt.addColumn('number','CA (€)');
+    DATA.genre.forEach(g => dt.addRow([g.label, g.value]));
+    const chart = new google.visualization.PieChart(el);
+    chart.draw(dt, {
+      height:280, fontName:'DM Sans',
+      pieHole:0.45,
+      colors:[COLORS.mauve, COLORS.blue],
+      legend:{position:'bottom',textStyle:{color:'#1a1410',fontName:'DM Sans',fontSize:13}},
+      chartArea:{left:20,right:20,top:10,bottom:50},
+      backgroundColor:'transparent',
+      pieSliceText:'percentage',
+      pieSliceTextStyle:{color:'#fff',bold:true,fontName:'DM Sans',fontSize:14},
+      tooltip:{textStyle:{fontName:'DM Sans'}},
+    });
+  } else {
+    const dt = new google.visualization.DataTable();
+    dt.addColumn('string','Tranche');
+    dt.addColumn('number','CA (€)');
+    dt.addColumn({type:'string',role:'style'});
+    DATA.age.forEach((a,i) => dt.addRow([a.label, a.value, `color:${PALETTE[i]}`]));
+    const chart = new google.visualization.ColumnChart(el);
+    chart.draw(dt, {
+      height:280, fontName:'DM Sans',
+      legend:{position:'none'},
+      hAxis:{textStyle:{color:'#4a4038',fontSize:12}},
+      vAxis:{textStyle:{color:'#6a6050'}, format:'#,### €'},
+      backgroundColor:'transparent',
+      chartArea:{left:80,right:20,top:10,bottom:40,width:'88%'},
+      bar:{groupWidth:'60%'},
+    });
+  }
+}
+
+// ── EDITIONS ──────────────────────────────────────────────────────────────────
+function drawEditionsChart() {
+  const el = document.getElementById('chart_editions');
+  const dt = new google.visualization.DataTable();
+  dt.addColumn('string','Maison d\'édition');
+  dt.addColumn('number','Unités');
+  dt.addColumn({type:'string',role:'style'});
+  dt.addColumn({type:'string',role:'annotation'});
+  DATA.editions.forEach((e,i) => {
+    dt.addRow([e.nom, e.qte, `color:${PALETTE[i]}`, e.qte+'']);
+  });
+  const chart = new google.visualization.BarChart(el);
+  chart.draw(dt, {
+    height:280, fontName:'DM Sans',
+    legend:{position:'none'},
+    hAxis:{textStyle:{color:'#6a6050'}},
+    vAxis:{textStyle:{color:'#1a1410',fontSize:12}},
+    backgroundColor:'transparent',
+    chartArea:{left:120,right:50,top:10,bottom:20,width:'72%'},
+    bar:{groupWidth:'65%'},
+    annotations:{alwaysOutside:true, textStyle:{color:'#1a1410',bold:true,fontName:'DM Sans',fontSize:12}},
+  });
+}
+
+// ── TABLE ─────────────────────────────────────────────────────────────────────
+function buildTable() {
+  const tbody = document.getElementById('ranking-body');
+  const totalCA = DATA.livres.reduce((s,l)=>s+l.ca,0);
+  const maxCA = DATA.livres[0].ca;
+  tbody.innerHTML = DATA.livres.map((l,i)=>`
+    <tr>
+      <td class="rank-num">${i+1}</td>
+      <td>
+        <div class="rank-title">${l.titre}</div>
+        <div class="rank-author">${l.auteur}</div>
+      </td>
+      <td><div class="rank-title" style="font-weight:400">${l.auteur}</div></td>
+      <td class="rank-bar-wrap">
+        <div class="rank-bar" style="width:${Math.round(l.ca/maxCA*100)}%"></div>
+        <div style="font-size:.7rem;color:#8a8070;margin-top:3px">${(l.ca/totalCA*100).toFixed(1)}%</div>
+      </td>
+      <td class="rank-ca">${l.ca.toLocaleString('fr-FR',{style:'currency',currency:'EUR'})}</td>
+    </tr>
+  `).join('');
+}
+
+// ── FILTER ────────────────────────────────────────────────────────────────────
+function filterData() {
+  const v = document.getElementById('filterMois').value;
+  const info = document.getElementById('filter-info');
+  const moisNames = {2:'Février 2018', 3:'Mars 2018', 4:'Avril 2018'};
+  if (v === 'all') {
+    info.textContent = 'Toutes les données 2018';
+    // restore full data
+  } else {
+    const idx = parseInt(v)-2;
+    info.textContent = `Mois sélectionné : ${moisNames[v]} — CA : ${DATA.mois.ca[idx].toLocaleString('fr-FR',{style:'currency',currency:'EUR'})} | ${DATA.mois.qte[idx]} unités`;
+  }
+}
+
+// Resize on window change
+window.addEventListener('resize', ()=>{
+  drawMoisChart(); drawLivresChart(); drawClientChart(); drawEditionsChart();
+});
+</script>
+</body>
+</html>
