@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:TalendMetadata="http://www.talend.org/metadata/connection/2010" xmlns:orgomg.cwm.resource.record="http:///orgomg/cwm/resource/record.ecore">
+  <TalendMetadata:DelimitedFileConnection xmi:id="_oFYEYB-mEfGV3YEdOSF01Q" name="personne.txt" dataPackage="_oFYEYR-mEfGV3YEdOSF01Q" Server="Localhost 127.0.0.1" FilePath="C:/Users/pc cam/Desktop/BDMED/personne.txt" Format="WINDOWS" Encoding="UTF-8" FieldSeparatorValue="&quot;,&quot;" RowSeparatorValue="&quot;\n&quot;" UseHeader="true" HeaderValue="1" FirstLineCaption="true" FieldSeparatorType="Custom UTF8"/>
+  <orgomg.cwm.resource.record:RecordFile xmi:id="_oFYEYR-mEfGV3YEdOSF01Q" name="default" dataManager="_oFYEYB-mEfGV3YEdOSF01Q">
+    <ownedElement xsi:type="TalendMetadata:MetadataTable" xmi:id="_oFYEYh-mEfGV3YEdOSF01Q" id="_YAvjIB-mEfGV3YEdOSF01Q" label="metadata">
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_oFYEYx-mEfGV3YEdOSF01Q" label="id_personne" length="2" talendType="id_String" key="true" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_oFYEZB-mEfGV3YEdOSF01Q" label="nom" length="11" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_oFYEZR-mEfGV3YEdOSF01Q" label="prenom" length="7" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_oFYEZh-mEfGV3YEdOSF01Q" label="statut" length="11" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_oFYEZx-mEfGV3YEdOSF01Q" label="ville" length="9" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+    </ownedElement>
+  </orgomg.cwm.resource.record:RecordFile>
+</xmi:XMI>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:TalendMetadata="http://www.talend.org/metadata/connection/2010" xmlns:orgomg.cwm.resource.record="http:///orgomg/cwm/resource/record.ecore">
+  <TalendMetadata:DelimitedFileConnection xmi:id="_XwUmoD2kEfGzatoYswicmA" name="clients2" dataPackage="_XwUmoT2kEfGzatoYswicmA" Server="Localhost 127.0.0.1" FilePath="C:/Users/pc cam/Desktop/BDMED/TP5/clients.csv" Format="WINDOWS" Encoding="UTF-8" FieldSeparatorValue="&quot;;&quot;" RowSeparatorValue="&quot;\n&quot;" HeaderValue="0"/>
+  <orgomg.cwm.resource.record:RecordFile xmi:id="_XwUmoT2kEfGzatoYswicmA" name="default" dataManager="_XwUmoD2kEfGzatoYswicmA">
+    <ownedElement xsi:type="TalendMetadata:MetadataTable" xmi:id="_XwUmoj2kEfGzatoYswicmA" id="_0gjtQD2jEfGzatoYswicmA" label="metadata">
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_XwUmoz2kEfGzatoYswicmA" label="id" length="2" talendType="id_Integer" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_XwUmpD2kEfGzatoYswicmA" label="nom" length="10" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_XwUmpT2kEfGzatoYswicmA" label="prenom" length="10" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_XwUmpj2kEfGzatoYswicmA" label="date" length="-1" talendType="id_Date" pattern="&quot;d/M/yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_XwUmpz2kEfGzatoYswicmA" label="genre" length="1" talendType="id_Integer" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_XwUmqD2kEfGzatoYswicmA" label="nmr_tlf" length="8" talendType="id_Integer" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_XwUmqT2kEfGzatoYswicmA" label="adresse" length="37" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+    </ownedElement>
+  </orgomg.cwm.resource.record:RecordFile>
+</xmi:XMI>

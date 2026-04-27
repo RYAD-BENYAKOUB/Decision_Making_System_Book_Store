@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:TalendMetadata="http://www.talend.org/metadata/connection/2010" xmlns:orgomg.cwm.resource.record="http:///orgomg/cwm/resource/record.ecore">
+  <TalendMetadata:DelimitedFileConnection xmi:id="_I1-6EQTUEfGZz6KQNAQ0Cg" name="mail" dataPackage="_I1-6EgTUEfGZz6KQNAQ0Cg" Server="Localhost 127.0.0.1" FilePath="C:/Users/pc cam/Desktop/BDMED/mails.txt" Format="WINDOWS" Encoding="UTF-8" FieldSeparatorValue="&quot;|&quot;" RowSeparatorValue="&quot;\n&quot;" HeaderValue="0" FieldSeparatorType="Custom UTF8"/>
+  <orgomg.cwm.resource.record:RecordFile xmi:id="_I1-6EgTUEfGZz6KQNAQ0Cg" name="default" dataManager="_I1-6EQTUEfGZz6KQNAQ0Cg">
+    <ownedElement xsi:type="TalendMetadata:MetadataTable" xmi:id="_I1-6EwTUEfGZz6KQNAQ0Cg" id="_9ViLIATSEfGZz6KQNAQ0Cg" label="metadata">
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_I1-6FATUEfGZz6KQNAQ0Cg" label="nom" length="10" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_I1-6FQTUEfGZz6KQNAQ0Cg" label="prenom" length="10" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_I1-6FgTUEfGZz6KQNAQ0Cg" label="mail" length="30" talendType="id_String" key="true" pattern="&quot;dd-MM-yyyy&quot;"/>
+    </ownedElement>
+  </orgomg.cwm.resource.record:RecordFile>
+</xmi:XMI>
